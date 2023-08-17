@@ -53,29 +53,29 @@ def plotCandles(plt:pg.PlotItem, df:pd.DataFrame):
         plt.addItem(pg.BarGraphItem(x=index, y0=bot, y1=top, width=0.5, brush=color))
 
     
-df = initial_bars('SPY')
+# df = initial_bars('SPY')
 
-app = pg.mkQApp()
-mw = QtWidgets.QMainWindow()
-mw.setWindowTitle('pyqtgraph example: PlotWidget')
-mw.resize(800,800)
-cw = QtWidgets.QWidget()
-mw.setCentralWidget(cw)
-l = QtWidgets.QVBoxLayout()
-cw.setLayout(l)
+# app = pg.mkQApp()
+# mw = QtWidgets.QMainWindow()
+# mw.setWindowTitle('pyqtgraph example: PlotWidget')
+# mw.resize(800,800)
+# cw = QtWidgets.QWidget()
+# mw.setCentralWidget(cw)
+# l = QtWidgets.QVBoxLayout()
+# cw.setLayout(l)
 
-pw = pg.PlotWidget(name='Plot1')  ## giving the plots names allows us to link their axes together
-l.addWidget(pw)
-pw2 = pg.PlotWidget(name='Plot2')
-l.addWidget(pw2)
-pw3 = pg.PlotWidget()
-l.addWidget(pw3)
+# pw = pg.PlotWidget(name='Plot1')  ## giving the plots names allows us to link their axes together
+# l.addWidget(pw)
+# pw2 = pg.PlotWidget(name='Plot2')
+# l.addWidget(pw2)
+# pw3 = pg.PlotWidget()
+# l.addWidget(pw3)
 
-mw.show()
+# mw.show()
 
-# plotCandles(pw, df)
+# # plotCandles(pw, df)
 
-pg.exec()
+# pg.exec()
 
 # bars = initial_bars('SPY')
 # print('len =', len(bars))
