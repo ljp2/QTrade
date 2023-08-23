@@ -35,7 +35,6 @@ def filter_open_hours(df:pd.DataFrame) -> pd.DataFrame:
     return df.between_time(start_time, end_time)
 
 
-
 def get_lastest_quote_single(ticker:str) -> RawData:
     request_params = StockLatestQuoteRequest(symbol_or_symbols=ticker)
     latest_quote = stock_hist_client.get_stock_latest_quote(request_params=request_params)
@@ -54,10 +53,9 @@ def get_minute_bars_for_day(ticker:str, day:datetime):
         start=day.strftime("%Y-%m-%d 00:00"),
         end = day.strftime("%Y-%m-%d 23:59")
     )
-    
     df = stock_hist_client.get_stock_bars(request_params).df.loc[ticker]
-    df.index = df.index.tz_convert(eastern_timezone)
-    df = filter_open_hours(df)
+    # df.index = df.index.tz_convert(eastern_timezone)
+    # df = filter_open_hours(df)
     return df
 
     # try:

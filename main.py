@@ -4,38 +4,12 @@ from datetime import datetime, timedelta
 import pandas as pd
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtWidgets
-import api
+import myapi
 
 current_file_path = os.path.abspath(__file__)
 parent_directory = os.path.dirname(current_file_path)
 BARS_DIRECTORY = f'{parent_directory}/BARS'
 
-
-
-def initial_bars(ticker:str, number_days:int=1):
-    dd = timedelta(days=1)
-    day = datetime.today()
-    target_length = number_days * 389
-    bars = pd.DataFrame()
-    num_attmepts = 0
-
-    while num_attmepts < 5:
-        num_attmepts += 1
-        try:
-            df = api.get_minute_bars_for_day(ticker=ticker, day=day)
-            print( "About to concat len = ", len(df))
-            bars = pd.concat([bars, df])
-        except:
-            pass
-        if len(bars) < target_length:
-            day = day - dd
-        else:
-            break
-        print(num_attmepts, '\t', len(bars))
-    if len(bars) < target_length:
-        raise RuntimeError("Could not initialize required number of minute bars")
-    bars.sort_index(inplace=True)
-    return bars
 
 def plotCandles(plt:pg.PlotItem, df:pd.DataFrame):
     for index,row in df.iterrows():
@@ -49,36 +23,26 @@ def plotCandles(plt:pg.PlotItem, df:pd.DataFrame):
             top = row.open 
             bot = row.close
             color = 'r'
-        plt.addItem(pg.PlotDataItem(x=[pos, pos],y=[row.low, row.high],pen=pg.mkPen(color, width=3)))
-        plt.addItem(pg.BarGraphItem(x=index, y0=bot, y1=top, width=0.5, brush=color))
+        plt.addItem(pg.PlotDataItem(x=[pos, pos],y=[row.low, row.high],pen=pg.mkPen(color, width=5)))
+        plt.addItem(pg.BarGraphItem(x=index, y0=bot, y1=top, width=40, brush=color))
 
-    
-# df = initial_bars('SPY')
 
-# app = pg.mkQApp()
-# mw = QtWidgets.QMainWindow()
-# mw.setWindowTitle('pyqtgraph example: PlotWidget')
-# mw.resize(800,800)
-# cw = QtWidgets.QWidget()
-# mw.setCentralWidget(cw)
-# l = QtWidgets.QVBoxLayout()
-# cw.setLayout(l)
+# today = datetime.now()
+# df = myapi.get_minute_bars_day_open_hours('SPY', today)
+# df.to_csv('bars.csv')
 
-# pw = pg.PlotWidget(name='Plot1')  ## giving the plots names allows us to link their axes together
-# l.addWidget(pw)
-# pw2 = pg.PlotWidget(name='Plot2')
-# l.addWidget(pw2)
-# pw3 = pg.PlotWidget()
-# l.addWidget(pw3)
+df = pd.read_csv('bars.csv',header=0, index_col='timestamp')
 
-# mw.show()
+app = pg.mkQApp("DateAxisItem Example")
 
-# # plotCandles(pw, df)
+w = pg.PlotWidget(axisItems = {'bottom': pg.DateAxisItem()})
+w.resize(1200, 800)
 
-# pg.exec()
+plotCandles(w, df)
 
-# bars = initial_bars('SPY')
-# print('len =', len(bars))
-# print(bars.head())
-# print(bars.tail())
-# bars.to_csv("bars.csv")
+w.showGrid(x=True, y=True)
+
+w.show()
+
+if __name__ == '__main__':
+    pg.exec()
