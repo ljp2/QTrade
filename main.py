@@ -31,7 +31,7 @@ def plotCandles(plt:pg.PlotItem, df:pd.DataFrame):
 # df = myapi.get_minute_bars_day_open_hours('SPY', today)
 # df.to_csv('bars.csv')
 
-df = pd.read_csv('bars.csv',header=0, index_col='timestamp')
+df = pd.read_csv('Bars/Aug-01.csv',header=0, index_col='timestamp')
 
 app = pg.mkQApp("DateAxisItem Example")
 
