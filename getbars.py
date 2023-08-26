@@ -1,14 +1,13 @@
 import pandas as pd
 from datetime import datetime, timedelta
-from myapi import get_minute_bars_day_open_hours
 from time import sleep
-
+from api import get_minute_bars_for_day_open
 dd = timedelta(days = 1)
 
 day = datetime.now()
 n = 0
 while n < 30:
-    df = get_minute_bars_day_open_hours('SPY', day)
+    df = get_minute_bars_for_day_open('SPY', day)
     if len(df) > 0:
         day_str = day.strftime('%b-%d')
         print(day_str)

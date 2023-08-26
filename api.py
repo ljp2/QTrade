@@ -6,7 +6,6 @@ import pytz
 eastern_timezone = pytz.timezone('America/New_York')
 
 
-
 from alpaca.data.historical import StockHistoricalDataClient
 from alpaca.data.requests import StockLatestQuoteRequest, StockBarsRequest
 from alpaca.data.timeframe import TimeFrame
@@ -45,6 +44,20 @@ def get_lastest_quote_multiple(tickers:list[str]) -> dict[str, Quote]:
     multisymbol_request_params  = StockLatestQuoteRequest(symbol_or_symbols=tickers)
     latest_quote = stock_hist_client.get_stock_latest_quote(request_params=multisymbol_request_params)
     return latest_quote
+
+
+
+def get_minute_bars_for_day_open(ticker:str, day:datetime):
+    mktopen  = eastern_timezone.localize(datetime(day.year, day.month, day.day, 9, 30)).astimezone(pytz.utc)
+    mktclose = eastern_timezone.localize(datetime(day.year, day.month, day.day, 15, 59)).astimezone(pytz.utc)
+    request_params = StockBarsRequest(
+        symbol_or_symbols=ticker,
+        timeframe=TimeFrame.Minute,
+        start = mktopen,
+        end = mktclose
+    )
+    df = stock_hist_client.get_stock_bars(request_params).df.loc[ticker]
+    return df
 
 def get_minute_bars_for_day(ticker:str, day:datetime):
     request_params = StockBarsRequest(
