@@ -6,7 +6,7 @@ dd = timedelta(days = 1)
 
 day = datetime.now()
 n = 0
-while n < 5:
+while n < 2:
     df = get_minute_bars_for_day_open('SPY', day)
     if (df is not None ) and (len(df) > 0):
         day_str = day.strftime('%b-%d')

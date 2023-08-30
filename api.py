@@ -48,8 +48,8 @@ def get_lastest_quote_multiple(tickers:list[str]) -> dict[str, Quote]:
 
 
 def get_minute_bars_for_day_open(ticker:str, day:datetime):
-    s = datetime(day.year, day.month, day.day)
-    e = s - timedelta(days=1)
+    e = datetime(day.year, day.month, day.day)
+    s = e - timedelta(days=1)
     request_params = StockBarsRequest(
         symbol_or_symbols=ticker,
         timeframe=TimeFrame.Minute,
