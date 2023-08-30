@@ -58,6 +58,7 @@ def get_minute_bars_for_today_open(ticker:str):
         df = stock_hist_client.get_stock_bars(request_params).df.loc[ticker]
         df.index = df.index.tz_convert(eastern_timezone)
         df = filter_open_hours(df)
+        df.index = df.index.astype(int) // 10**9
     except:
         return None
     if len(df) > 0:
