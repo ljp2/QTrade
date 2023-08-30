@@ -48,47 +48,36 @@ def get_lastest_quote_multiple(tickers:list[str]) -> dict[str, Quote]:
 
 
 def get_minute_bars_for_day_open(ticker:str, day:datetime):
-    mktopen  = eastern_timezone.localize(datetime(day.year, day.month, day.day, 9, 30)).astimezone(pytz.utc)
-    mktclose = eastern_timezone.localize(datetime(day.year, day.month, day.day, 15, 59)).astimezone(pytz.utc)
+    s = datetime(day.year, day.month, day.day)
+    e = s - timedelta(days=1)
     request_params = StockBarsRequest(
         symbol_or_symbols=ticker,
         timeframe=TimeFrame.Minute,
-        start = mktopen,
-        end = mktclose
+        start = s,
+        end = e
     )
-    df = stock_hist_client.get_stock_bars(request_params).df.loc[ticker]
+    try:
+        df = stock_hist_client.get_stock_bars(request_params).df.loc[ticker]
+        df.index = df.index.tz_convert(eastern_timezone)
+        df = filter_open_hours(df)
+    except:
+        df = None
     return df
 
 def get_minute_bars_for_day(ticker:str, day:datetime):
+    s = datetime(day.year, day.month, day.day)
+    e = s - timedelta(days=1)
     request_params = StockBarsRequest(
         symbol_or_symbols=ticker,
         timeframe=TimeFrame.Minute,
-        start=day.strftime("%Y-%m-%d 00:00"),
-        end = day.strftime("%Y-%m-%d 23:59")
+        start = s,
+        end = e
     )
-    df = stock_hist_client.get_stock_bars(request_params).df.loc[ticker]
-    # df.index = df.index.tz_convert(eastern_timezone)
-    # df = filter_open_hours(df)
+    try:
+        df = stock_hist_client.get_stock_bars(request_params).df.loc[ticker]
+    except:
+        df = None
     return df
-
-    # try:
-    #     df = stock_hist_client.get_stock_bars(request_params).df.loc[ticker]
-    #     df.index = df.index.tz_convert(eastern_timezone)
-    #     df = filter_open_hours(df)
-    #     return df
-    # except:
-    #     df = None
-        # day_1 = day - timedelta(days=1)
-        # request_params = StockBarsRequest(
-        #     symbol_or_symbols=ticker,
-        #     timeframe=TimeFrame.Minute,
-        #     start=day_1.strftime("%Y-%m-%d 00:00"),
-        #     end = day_1.strftime("%Y-%m-%d 23:59")
-        # )
-        # df = stock_hist_client.get_stock_bars(request_params).df.loc[ticker]      
-
-    
-    return filter_open_hours(df)
 
 
 def get_historical_data_utc(ticker:str, number_days= 1, timeframe:TimeFrame = TimeFrame.Minute ) -> pd.DataFrame:

@@ -6,9 +6,9 @@ dd = timedelta(days = 1)
 
 day = datetime.now()
 n = 0
-while n < 30:
+while n < 5:
     df = get_minute_bars_for_day_open('SPY', day)
-    if len(df) > 0:
+    if (df is not None ) and (len(df) > 0):
         day_str = day.strftime('%b-%d')
         print(day_str)
         df.to_csv(f'Bars/{day_str}.csv')
