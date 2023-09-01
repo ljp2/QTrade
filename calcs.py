@@ -1,12 +1,11 @@
-def HA(df):
+import pandas as pd
+
+def HA(df:pd.DataFrame) -> pd.DataFrame:
     df.columns = df.columns.str.lower()
-    
     new_df = df[['open', 'high', 'low', 'close']]
     HA_df = df.copy()
-    
     HA_df['close'] = round(
         ((new_df['open'] + new_df['high'] + new_df['low'] + new_df['close'])/4), 2)
-
     for i in range(len(new_df)):
         if i == 0:
             HA_df.iat[0, 0] = round(
@@ -14,10 +13,19 @@ def HA(df):
         else:
             HA_df.iat[i, 0] = round(
                 ((HA_df.iat[i-1, 0] + HA_df.iat[i-1, 3])/2), 2)
-
     HA_df['high'] = HA_df.loc[:, ['open', 'close']].join(
         new_df['high']).max(axis=1)
     HA_df['low'] = HA_df.loc[:, ['open', 'close']].join(
         new_df['low']).min(axis=1)
-    
     return HA_df
+
+
+def calcStochRSI(df:pd.DataFrame) -> pd.DataFrame:
+    s = df.ta.stochrsi()
+    s.columns = ['K', 'D']
+    return s
+
+def calcATR(df:pd.DataFrame) -> pd.DataFrame:
+    atr = df.ta.atr().to_frame()
+    atr.columns = ['ATR']
+    return atr

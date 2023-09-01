@@ -39,4 +39,6 @@ def plotCandles(plt:pg.PlotItem, df:pd.DataFrame):
         plt.addItem(pg.PlotDataItem(x=[pos, pos],y=[row.low, row.high],pen=pg.mkPen(color, width=5)))
         plt.addItem(pg.BarGraphItem(x=index, y0=bot, y1=top, width=40, brush=color))
 
+def plotStochRSI(plt:pg.PlotItem, df:pd.DataFrame):
+    pass
 
